@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trading Backtest System - Project Showcase</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .slide {
+            width: 90%;
+            max-width: 1200px;
+            height: 90vh;
+            background: white;
+            border-radius: 20px;
+            padding: 60px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            display: none;
+            animation: slideIn 0.5s ease-out;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .slide-header {
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 3em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h2 {
+            color: #444;
+            font-size: 2.2em;
+            margin-bottom: 30px;
+        }
+
+        h3 {
+            color: #667eea;
+            font-size: 1.6em;
+            margin: 25px 0 15px 0;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.4em;
+            font-weight: 300;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+            margin-top: 30px;
+        }
+
+        .content-box {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 25px;
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .content-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            padding: 12px 0;
+            padding-left: 35px;
+            position: relative;
+            font-size: 1.1em;
+            color: #555;
+        }
+
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        .code-block .comment {
+            color: #6A9955;
+        }
+
+        .code-block .keyword {
+            color: #569CD6;
+        }
+
+        .code-block .string {
+            color: #CE9178;
+        }
+
+        .workflow-step {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .workflow-step:hover {
+            background: #f0f4ff;
+            transform: translateX(10px);
+        }
+
+        .workflow-step::before {
+            content: attr(data-step);
+            position: absolute;
+            left: -40px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #667eea;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.3em;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin: 30px 0;
+        }
+
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: scale(1.05);
+        }
+
+        .metric-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .metric-label {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            background: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .nav-btn:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: #667eea;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .tech-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: transform 0.3s ease;
+        }
+
+        .tech-badge:hover {
+            transform: scale(1.1);
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 5px solid #fdcb6e;
+        }
+
+        .strategy-diagram {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .arrow {
+            display: inline-block;
+            margin: 0 20px;
+            color: #667eea;
+            font-size: 2em;
+        }
+
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            h2 {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- Slide 1: Title Slide -->
+        <div class="slide active">
+            <div class="slide-number">1 / 10</div>
+            <div style="display: flex; flex-direction: column; justify-content: center; height: 100%; text-align: center;">
+                <h1 style="font-size: 4em; margin-bottom: 30px;">Trading Backtest System</h1>
+                <p class="subtitle" style="font-size: 1.8em; margin-bottom: 20px;">Python-Based Quantitative Strategy Implementation</p>
+                <p class="subtitle" style="font-size: 1.4em; color: #888;">SMA Crossover Strategy with Automated Backtesting</p>
+                
+                <div style="margin-top: 60px;">
+                    <p style="font-size: 1.2em; color: #666;">Prepared for: Technical Assessment
+                    </p>
+                    <p style="font-size: 1.2em; color: #666;"><strong>Presented by:</strong> Juned Sindha<br></p>
+                    <p style="font-size: 1.2em; color: #666;">Date: September 2025</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Project Overview -->
+        <div class="slide">
+            <div class="slide-number">2 / 10</div>
+            <div class="slide-header">
+                <h2>Project Overview</h2>
+            </div>
+            
+            <div class="content-grid">
+                <div class="content-box">
+                    <h3>🎯 Objective</h3>
+                    <p style="line-height: 1.8; color: #555;">
+                        Build a robust Python trading backtest system that implements a Simple Moving Average (SMA) crossover strategy with proper risk management and no look-ahead bias.
+                    </p>
+                </div>
+                
+                <div class="content-box">
+                    <h3>📊 Key Deliverables</h3>
+                    <ul class="feature-list">
+                        <li>Automated data cleaning pipeline</li>
+                        <li>Configurable strategy parameters</li>
+                        <li>Excel-based trade reporting</li>
+                        <li>Performance validation metrics</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="highlight-box" style="margin-top: 40px;">
+                <h3 style="margin-top: 0;">💡 Innovation Highlights</h3>
+                <p style="line-height: 1.8; color: #555;">
+                    Developed a complete end-to-end solution with synthetic data generation capabilities for testing when live market data is unavailable, ensuring continuous development and testing cycles.
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 3: Technical Architecture -->
+        <div class="slide">
+            <div class="slide-number">3 / 10</div>
+            <div class="slide-header">
+                <h2>Technical Architecture</h2>
+            </div>
+            
+            <h3>System Components</h3>
+            <div style="margin-left: 50px;">
+                <div class="workflow-step" data-step="1">
+                    <h4>Data Layer</h4>
+                    <p>CSV data ingestion with automatic cleaning and validation</p>
+                </div>
+                
+                <div class="workflow-step" data-step="2">
+                    <h4>Processing Engine</h4>
+                    <p>Pandas-based computation with vectorized operations for performance</p>
+                </div>
+                
+                <div class="workflow-step" data-step="3">
+                    <h4>Strategy Module</h4>
+                    <p>Modular strategy implementation with configurable parameters</p>
+                </div>
+                
+                <div class="workflow-step" data-step="4">
+                    <h4>Output Layer</h4>
+                    <p>Excel reporting with trade details and validation reports</p>
+                </div>
+            </div>
+            
+            <div class="tech-stack" style="margin-top: 40px;">
+                <div class="tech-badge">Python 3.10+</div>
+                <div class="tech-badge">Pandas</div>
+                <div class="tech-badge">NumPy</div>
+                <div class="tech-badge">OpenPyXL</div>
+                <div class="tech-badge">JSON Config</div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Data Pipeline -->
+        <div class="slide">
+            <div class="slide-number">4 / 10</div>
+            <div class="slide-header">
+                <h2>Data Pipeline & Processing</h2>
+            </div>
+            
+            <h3>Data Flow Architecture</h3>
+            <div class="strategy-diagram">
+                <span style="font-size: 1.2em;">Raw CSV</span>
+                <span class="arrow">→</span>
+                <span style="font-size: 1.2em;">Clean & Validate</span>
+                <span class="arrow">→</span>
+                <span style="font-size: 1.2em;">Calculate Indicators</span>
+                <span class="arrow">→</span>
+                <span style="font-size: 1.2em;">Generate Signals</span>
+            </div>
+            
+            <div class="content-grid">
+                <div>
+                    <h3>Data Cleaning Steps</h3>
+                    <ul class="feature-list">
+                        <li>Date parsing and standardization</li>
+                        <li>Duplicate removal</li>
+                        <li>Missing value handling</li>
+                        <li>OHLC validation</li>
+                        <li>Chronological sorting</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3>Quality Assurance</h3>
+                    <ul class="feature-list">
+                        <li>Automated validation reports</li>
+                        <li>Data range verification</li>
+                        <li>Column integrity checks</li>
+                        <li>Statistical anomaly detection</li>
+                        <li>Volume data validation</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Strategy Implementation -->
+        <div class="slide">
+            <div class="slide-number">5 / 10</div>
+            <div class="slide-header">
+                <h2>SMA Crossover Strategy</h2>
+            </div>
+            
+            <h3>Strategy Logic</h3>
+            <div class="code-block">
+                <span class="comment"># Core Strategy Implementation</span><br>
+                <span class="keyword">def</span> detect_crossover(fast_ma, slow_ma):<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Detect when fast SMA crosses above slow SMA</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;above = fast_ma > slow_ma<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;above_prev = above.shift(1)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="comment"># Generate signals with no look-ahead bias</span><br>
+                &nbsp;&nbsp;&nbsp;&nbsp;long_signal = (above & ~above_prev).shift(1)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;exit_signal = (~above & above_prev).shift(1)<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> long_signal, exit_signal
+            </div>
+            
+            <div class="content-grid">
+                <div class="content-box">
+                    <h3>Entry Rules</h3>
+                    <p>• Fast SMA (20) crosses above Slow SMA (50)</p>
+                    <p>• Execute at next day's open price</p>
+                    <p>• Fixed position sizing</p>
+                </div>
+                
+                <div class="content-box">
+                    <h3>Exit Rules</h3>
+                    <p>• Fast SMA crosses below Slow SMA</p>
+                    <p>• No stop-loss in base implementation</p>
+                    <p>• Track open positions at end</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Key Features -->
+        <div class="slide">
+            <div class="slide-number">6 / 10</div>
+            <div class="slide-header">
+                <h2>Key Features & Innovations</h2>
+            </div>
+            
+            <div class="content-grid">
+                <div class="content-box">
+                    <h3>🚀 Performance Optimizations</h3>
+                    <ul class="feature-list">
+                        <li>Vectorized calculations using NumPy</li>
+                        <li>Efficient rolling window operations</li>
+                        <li>Memory-optimized data structures</li>
+                        <li>Minimal loop iterations</li>
+                    </ul>
+                </div>
+                
+                <div class="content-box">
+                    <h3>🛡️ Risk Management</h3>
+                    <ul class="feature-list">
+                        <li>No look-ahead bias prevention</li>
+                        <li>Proper signal lagging</li>
+                        <li>Position tracking system</li>
+                        <li>P&L calculation per trade</li>
+                    </ul>
+                </div>
+                
+                <div class="content-box">
+                    <h3>🔧 Configurability</h3>
+                    <ul class="feature-list">
+                        <li>JSON-based configuration</li>
+                        <li>Adjustable SMA periods</li>
+                        <li>Customizable execution rules</li>
+                        <li>Flexible data sources</li>
+                    </ul>
+                </div>
+                
+                <div class="content-box">
+                    <h3>📈 Data Generation</h3>
+                    <ul class="feature-list">
+                        <li>Synthetic OHLC data creation</li>
+                        <li>Realistic price movements</li>
+                        <li>Configurable volatility</li>
+                        <li>Trend simulation capabilities</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Testing & Validation -->
+        <div class="slide">
+            <div class="slide-number">7 / 10</div>
+            <div class="slide-header">
+                <h2>Testing & Validation</h2>
+            </div>
+            
+            <h3>Comprehensive Testing Approach</h3>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-label">Data Points</div>
+                    <div class="metric-value">90+</div>
+                    <div class="metric-label">Days of OHLC data</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-label">Scenarios</div>
+                    <div class="metric-value">3</div>
+                    <div class="metric-label">Market conditions tested</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-label">Validation</div>
+                    <div class="metric-value">100%</div>
+                    <div class="metric-label">Data integrity checks</div>
+                </div>
+            </div>
+            
+            <h3 style="margin-top: 40px;">Validation Components</h3>
+            <div class="content-grid">
+                <div>
+                    <h4>Data Validation</h4>
+                    <ul class="feature-list">
+                        <li>OHLC relationship checks</li>
+                        <li>Date continuity verification</li>
+                        <li>Volume data validation</li>
+                        <li>Price anomaly detection</li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4>Strategy Validation</h4>
+                    <ul class="feature-list">
+                        <li>Signal generation accuracy</li>
+                        <li>Trade execution timing</li>
+                        <li>P&L calculation verification</li>
+                        <li>Position tracking integrity</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Output & Reporting -->
+        <div class="slide">
+            <div class="slide-number">8 / 10</div>
+            <div class="slide-header">
+                <h2>Output & Reporting</h2>
+            </div>
+            
+            <h3>Excel Trade Report Structure</h3>
+            <div class="code-block">
+                <span class="comment"># Output Format: orders.xlsx</span><br>
+                ┌─────────────┬──────────────┬─────┬─────────────┬────────────┬──────┬────────────┐<br>
+                │ entry_dt    │ entry_price  │ qty │ exit_dt     │ exit_price │ pnl  │ bars_held  │<br>
+                ├─────────────┼──────────────┼─────┼─────────────┼────────────┼──────┼────────────┤<br>
+                │ 2025-07-22  │ 16146.48    │ 1   │ 2025-08-15  │ 18274.83  │ 2128 │ 18         │<br>
+                │ 2025-08-27  │ 18272.36    │ 1   │ 2025-09-25  │ 18797.27  │ 525  │ 21         │<br>
+                └─────────────┴──────────────┴─────┴─────────────┴────────────┴──────┴────────────┘
+            </div>
+            
+            <div class="content-grid" style="margin-top: 30px;">
+                <div class="content-box">
+                    <h3>Validation Report</h3>
+                    <ul class="feature-list">
+                        <li>Data cleaning summary</li>
+                        <li>Date range analysis</li>
+                        <li>Row count statistics</li>
+                        <li>Quality metrics</li>
+                    </ul>
+                </div>
+                
+                <div class="content-box">
+                    <h3>Performance Metrics</h3>
+                    <ul class="feature-list">
+                        <li>Total P&L calculation</li>
+                        <li>Win rate percentage</li>
+                        <li>Average trade duration</li>
+                        <li>Trade frequency analysis</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Challenges & Solutions -->
+        <div class="slide">
+            <div class="slide-number">9 / 10</div>
+            <div class="slide-header">
+                <h2>Challenges & Solutions</h2>
+            </div>
+            
+            <div style="margin-top: 30px;">
+                <div class="content-box" style="margin-bottom: 25px;">
+                    <h3>🔴 Challenge: NaN Handling in Moving Averages</h3>
+                    <p style="margin-top: 15px; line-height: 1.8;">
+                        <strong>Solution:</strong> Implemented robust NaN handling with proper boolean type casting and fillna operations to ensure signal generation integrity.
+                    </p>
+                </div>
+                
+                <div class="content-box" style="margin-bottom: 25px;">
+                    <h3>🔴 Challenge: Look-Ahead Bias Prevention</h3>
+                    <p style="margin-top: 15px; line-height: 1.8;">
+                        <strong>Solution:</strong> Applied systematic signal shifting to ensure decisions at time t only use data available up to t-1, maintaining realistic backtesting conditions.
+                    </p>
+                </div>
+                
+                <div class="content-box" style="margin-bottom: 25px;">
+                    <h3>🔴 Challenge: Data Availability</h3>
+                    <p style="margin-top: 15px; line-height: 1.8;">
+                        <strong>Solution:</strong> Created synthetic data generator using geometric Brownian motion with configurable trends and volatility for continuous testing.
+                    </p>
+                </div>
+                
+                <div class="content-box">
+                    <h3>🔴 Challenge: Mixed Date Type Handling</h3>
+                    <p style="margin-top: 15px; line-height: 1.8;">
+                        <strong>Solution:</strong> Implemented robust date parsing and formatting functions to handle various date formats and None values in trade reports.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Conclusion -->
+        <div class="slide">
+            <div class="slide-number">10 / 10</div>
+            <div class="slide-header">
+                <h2>Project Achievements</h2>
+            </div>
+            
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value">✓</div>
+                    <div class="metric-label">Complete Automation</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-value">✓</div>
+                    <div class="metric-label">Production Ready</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-value">✓</div>
+                    <div class="metric-label">Fully Documented</div>
+                </div>
+            </div>
+            
+            <h3 style="margin-top: 40px;">Key Accomplishments</h3>
+            <ul class="feature-list" style="font-size: 1.2em; line-height: 2;">
+                <li>Built end-to-end backtesting system from scratch</li>
+                <li>Implemented robust data cleaning and validation</li>
+                <li>Created configurable strategy framework</li>
+                <li>Developed synthetic data generation for testing</li>
+                <li>Produced professional Excel reporting</li>
+                <li>Maintained code quality and documentation standards</li>
+            </ul>
+            
+            <div class="highlight-box" style="margin-top: 40px; background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);">
+                <h3 style="color: white; margin-top: 0;">Future Enhancements</h3>
+                <p style="color: white; line-height: 1.8;">
+                    • Additional strategy implementations • Real-time data integration • 
+                    Risk management features • Portfolio optimization • Web-based dashboard
+                </p>
+            </div>
+            
+            <div style="text-align: center; margin-top: 40px;">
+                <h2 style="color: #667eea;">Thank You!</h2>
+                <p style="font-size: 1.2em; color: #666;">Ready for Technical Discussion</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" onclick="previousSlide()">← Previous</button>
+        <button class="nav-btn" onclick="nextSlide()">Next →</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+        }
+
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+
+        function previousSlide() {
+            showSlide(currentSlide - 1);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') previousSlide();
+        });
+
+        // Touch/swipe support for mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) nextSlide();
+            if (touchEndX > touchStartX + 50) previousSlide();
+        }
+    </script>
+</body>
+</html>
